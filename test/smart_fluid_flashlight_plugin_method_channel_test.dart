@@ -5,13 +5,17 @@ import 'package:smart_fluid_flashlight_plugin/smart_fluid_flashlight_plugin_meth
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  MethodChannelSmartFluidFlashlightPlugin platform = MethodChannelSmartFluidFlashlightPlugin();
+  MethodChannelSmartFluidFlashlightPlugin platform =
+      MethodChannelSmartFluidFlashlightPlugin();
   const MethodChannel channel = MethodChannel('smart_fluid_flashlight_plugin');
 
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-          return '42';
+          if (methodCall.method == 'toggleLight') {
+            return true; 
+          }
+          return null;
         });
   });
 
@@ -20,7 +24,7 @@ void main() {
         .setMockMethodCallHandler(channel, null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await platform.getPlatformVersion(), '42');
+  test('toggleLight', () async {
+    expect(await platform.toggleLight(), true);
   });
 }
